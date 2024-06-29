@@ -132,7 +132,7 @@ class PlaylistGUI {
                 options[0]);
 
         if (selectedSong != null) {
-            String[] parts = selectedSong.split(",");
+            String[] parts = selectedSong.split("by");
             if (parts.length == 2) {
                 playlist.appendSong(parts[0].trim(), parts[1].trim());
                 displayPlaylist();

@@ -155,7 +155,7 @@ public class PlaylistManager {
         scanner.nextLine(); // Consume newline
 
         if (choice > 0 && choice <= list.size()) {
-            String[] parts = list.get(choice - 1).split(",");
+            String[] parts = list.get(choice - 1).split("by");
             if (parts.length == 2) {
                 playlist.appendSong(parts[0].trim(), parts[1].trim());
                 System.out.println("Song added to playlist.");
