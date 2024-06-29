@@ -133,4 +133,12 @@ public class Playlist implements Serializable {
             System.out.println("Current song: " + current.name + ", Author: " + current.author);
         }
     }
+
+    public Song getCurrent() {
+        return current;
+    }
+
+    public Song getHead() {
+        return head;
+    }
 }
