@@ -1,4 +1,8 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
@@ -8,7 +12,8 @@ import java.util.List;
 class PlaylistGUI {
     private Playlist playlist;
     private JFrame frame;
-    private JTextArea playlistDisplay;
+    private JTable playlistTable;
+    private DefaultTableModel tableModel;
 
     public PlaylistGUI() {
         playlist = new Playlist(this);
@@ -49,10 +54,15 @@ class PlaylistGUI {
 
         frame.setJMenuBar(menuBar);
 
-        // Make a text area for displaying the playlist
-        playlistDisplay = new JTextArea();
-        playlistDisplay.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(playlistDisplay);
+        // Create a table model and set up the table
+        String[] columnNames = { "  ", "Song Name", "Author", "Duration (seconds)", "Initial Duration" };
+        tableModel = new DefaultTableModel(columnNames, 0);
+        playlistTable = new JTable(tableModel);
+
+        int[] columnWidths = { 15, 240, 150, 100, 50 };
+        formatColumns(playlistTable, columnWidths);
+
+        JScrollPane scrollPane = new JScrollPane(playlistTable);
 
         // Make a control panel for editing the playlist
         JPanel controlPanel = new JPanel(new GridLayout(1, 3, 5, 5));
@@ -90,6 +100,20 @@ class PlaylistGUI {
         moveRightButton.addActionListener(e -> moveRight());
 
         frame.setVisible(true);
+    }
+
+    private void formatColumns(JTable table, int[] widths) {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int i = 0; i < widths.length; i++) {
+            TableColumn column = table.getColumnModel().getColumn(i);
+            playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            if (i == 0) {
+                column.setMaxWidth(widths[i]);
+            } else {
+                column.setPreferredWidth(widths[i]);
+            }
+        }
     }
 
     private void appendSong() {
@@ -230,18 +254,19 @@ class PlaylistGUI {
     }
 
     void displayPlaylist() {
-        playlistDisplay.setText("");
-        StringBuilder displayText = new StringBuilder();
+        tableModel.setRowCount(0); // Clear the table
         Song temp = playlist.getHead();
         Song current = playlist.getCurrent();
         while (temp != null) {
-            displayText.append(temp == current ? "> " : "  ")
-                    .append("Song: ").append(temp.name).append(", Author: ").append(temp.author)
-                    .append(", Duration: ").append(temp.duration).append(" seconds ")
-                    .append("|| Initial Duration: ").append(temp.initialDuration).append(" seconds\n");
+            tableModel.addRow(new Object[] {
+                    temp == current ? ">" : "",
+                    temp.name,
+                    temp.author,
+                    temp.duration + " seconds",
+                    temp.initialDuration
+            });
             temp = temp.next;
         }
-        playlistDisplay.setText(displayText.toString());
     }
 
     private void savePlaylist(ActionEvent e) {
