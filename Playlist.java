@@ -38,13 +38,9 @@ public class Playlist implements Serializable {
             current = newSong;
         } else {
             newSong.prev = current;
-            newSong.next = current.next;
-            if (current.next != null) {
-                current.next.prev = newSong;
-            }
             current.next = newSong;
-            current = newSong;
         }
+        current = newSong;
     }
 
     // Remove the current song from the playlist
