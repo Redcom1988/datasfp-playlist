@@ -1,6 +1,6 @@
 import java.io.Serializable;
-import java.time.*;
-
+import java.time.Duration;
+import java.time.Instant;
 import javax.swing.SwingUtilities;
 
 class Song implements Serializable {
@@ -30,6 +30,7 @@ public class Playlist implements Serializable {
         this.isPlaying = false;
     }
 
+    // Append a new song to the playlist
     public void appendSong(String name, String author, int duration) {
         Song newSong = new Song(name, author, duration);
         if (head == null) {
@@ -46,6 +47,7 @@ public class Playlist implements Serializable {
         }
     }
 
+    // Remove the current song from the playlist
     public void removeCurrentSong() {
         if (current == null)
             return;
@@ -63,46 +65,45 @@ public class Playlist implements Serializable {
         current = current.next != null ? current.next : current.prev;
     }
 
+    // Sort the playlist by song name
     public void sortByName() {
         if (head == null)
             return;
 
-        boolean sorted = false;
-
-        while (!sorted) {
+        boolean sorted;
+        do {
             sorted = true;
-            Song current = head;
-
-            while (current.next != null) {
-                if (current.name.compareToIgnoreCase(current.next.name) > 0) {
-                    swap(current, current.next);
+            Song temp = head;
+            while (temp.next != null) {
+                if (temp.name.compareToIgnoreCase(temp.next.name) > 0) {
+                    swap(temp, temp.next);
                     sorted = false;
                 }
-                current = current.next;
+                temp = temp.next;
             }
-        }
+        } while (!sorted);
     }
 
+    // Sort the playlist by author name
     public void sortByAuthor() {
         if (head == null)
             return;
 
-        boolean sorted = false;
-
-        while (!sorted) {
+        boolean sorted;
+        do {
             sorted = true;
-            Song current = head;
-
-            while (current.next != null) {
-                if (current.author.compareToIgnoreCase(current.next.author) > 0) {
-                    swap(current, current.next);
+            Song temp = head;
+            while (temp.next != null) {
+                if (temp.author.compareToIgnoreCase(temp.next.author) > 0) {
+                    swap(temp, temp.next);
                     sorted = false;
                 }
-                current = current.next;
+                temp = temp.next;
             }
-        }
+        } while (!sorted);
     }
 
+    // Swap the details of two songs
     private void swap(Song a, Song b) {
         String tempName = a.name;
         String tempAuthor = a.author;
@@ -112,6 +113,7 @@ public class Playlist implements Serializable {
         b.author = tempAuthor;
     }
 
+    // Play the playlist from the current song
     public void playPlaylistFromCurrent() {
         if (isPlaying)
             return;
@@ -130,20 +132,24 @@ public class Playlist implements Serializable {
                 }
                 if (current.duration == 0) {
                     current.duration = current.initialDuration;
-                    break;
+                    if (current.next != null && isPlaying)
+                        current = current.next;
+                    else
+                        break;
                 }
-                if (current.next != null && isPlaying)
-                    current = current.next;
             }
             isPlaying = false;
         }).start();
     }
 
+    // Stop playing the playlist
     public void stopPlaylist() {
         isPlaying = false;
     }
 
+    // Reset the duration of all songs to their initial durations
     public void returnInitialDuration() {
+        isPlaying = false;
         Song temp = head;
         while (temp != null) {
             temp.duration = temp.initialDuration;
@@ -151,20 +157,21 @@ public class Playlist implements Serializable {
         }
     }
 
+    // Display the entire playlist
     public void display() {
         Song temp = head;
         if (temp == null) {
             System.out.println("Playlist is empty.");
-            return;
         } else {
             System.out.println("Playlist:");
-        }
-        while (temp != null) {
-            System.out.println("Song: " + temp.name + ", Author: " + temp.author);
-            temp = temp.next;
+            while (temp != null) {
+                System.out.println("Song: " + temp.name + ", Author: " + temp.author);
+                temp = temp.next;
+            }
         }
     }
 
+    // Display the current song
     public void displayCurrent() {
         if (current != null) {
             System.out.println("Current song: " + current.name + ", Author: " + current.author);
@@ -173,12 +180,14 @@ public class Playlist implements Serializable {
         }
     }
 
+    // Move to the previous song in the playlist
     public void moveLeft() {
         if (current != null && current.prev != null) {
             current = current.prev;
         }
     }
 
+    // Move to the next song in the playlist
     public void moveRight() {
         if (current != null && current.next != null) {
             current = current.next;
