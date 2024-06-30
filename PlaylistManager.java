@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class PlaylistManager {
     public static void main(String[] args) {
-        Playlist playlist = new Playlist();
+        Playlist playlist = new Playlist(null);
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -69,11 +69,13 @@ public class PlaylistManager {
             switch (choice) {
                 case 1:
                     playlist.moveLeft();
+                    playlist.displayCurrent();
                     break;
                 case 2:
                     playlist.displayCurrent();
                 case 3:
                     playlist.moveRight();
+                    playlist.displayCurrent();
                     break;
                 case 4:
                     System.out.println("Song Input Menu");
@@ -89,7 +91,9 @@ public class PlaylistManager {
                         String name = scanner.nextLine();
                         System.out.print("Enter author name: ");
                         String author = scanner.nextLine();
-                        playlist.appendSong(name, author);
+                        System.out.print("Enter duration: ");
+                        int duration = scanner.nextInt();
+                        playlist.appendSong(name, author, duration);
                     } else if (inputChoice == 2) {
                         selectSongFromList(playlist, scanner);
                     } else {
@@ -155,9 +159,9 @@ public class PlaylistManager {
         scanner.nextLine(); // Consume newline
 
         if (choice > 0 && choice <= list.size()) {
-            String[] parts = list.get(choice - 1).split("by");
-            if (parts.length == 2) {
-                playlist.appendSong(parts[0].trim(), parts[1].trim());
+            String[] parts = list.get(choice - 1).split(" by | \\|\\| Duration: ");
+            if (parts.length == 3) {
+                playlist.appendSong(parts[0].trim(), parts[1].trim(), Integer.parseInt(parts[2].trim()));
                 System.out.println("Song added to playlist.");
             }
         } else {
@@ -171,7 +175,7 @@ public class PlaylistManager {
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(playlistName + ".ser"))) {
             out.writeObject(playlist);
-            System.out.println("Playlist saved successfully as" + playlistName + ".");
+            System.out.println("Playlist saved successfully as " + playlistName + ".");
         } catch (IOException e) {
             System.out.println("Error saving playlist: " + e.getMessage());
         }
@@ -182,11 +186,11 @@ public class PlaylistManager {
         String playlistName = scanner.nextLine().trim();
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(playlistName + ".ser"))) {
-            System.out.println("Playlist" + playlistName + "loaded successfully.");
+            System.out.println("Playlist " + playlistName + " loaded successfully.");
             return (Playlist) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error loading playlist: " + e.getMessage());
-            return new Playlist();
+            return new Playlist(null);
         }
     }
 }
