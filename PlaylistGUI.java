@@ -235,16 +235,10 @@ class PlaylistGUI {
         Song temp = playlist.getHead();
         Song current = playlist.getCurrent();
         while (temp != null) {
-            if (temp == current) {
-                displayText.append("> ");
-            } else {
-                displayText.append("  ");
-            }
-            displayText.append("Song: ").append(temp.name).append(", Author: ").append(temp.author)
-                    .append(", Duration: ")
-                    .append(temp.duration).append(" seconds ").append("|| Initial Duration: ")
-                    .append(temp.initialDuration).append(" seconds\n");
-            ;
+            displayText.append(temp == current ? "> " : "  ")
+                    .append("Song: ").append(temp.name).append(", Author: ").append(temp.author)
+                    .append(", Duration: ").append(temp.duration).append(" seconds ")
+                    .append("|| Initial Duration: ").append(temp.initialDuration).append(" seconds\n");
             temp = temp.next;
         }
         playlistDisplay.setText(displayText.toString());
