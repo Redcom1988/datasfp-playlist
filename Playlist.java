@@ -129,7 +129,7 @@ public class Playlist implements Serializable {
                     }
                 }
                 if (current.duration == 0) {
-                    removeCurrentSong();
+                    current.duration = current.initialDuration;
                 }
                 if (current.next != null && isPlaying)
                     current = current.next;
