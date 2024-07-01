@@ -92,7 +92,7 @@ class PlaylistGUI {
         frame.add(controlPanel, BorderLayout.SOUTH);
 
         // Add action listeners to the buttons
-        appendButton.addActionListener(e -> appendSong());
+        appendButton.addActionListener(e -> appendSongOption());
         removeButton.addActionListener(e -> removeCurrentSong());
         sortNameButton.addActionListener(e -> sortByName());
         sortAuthorButton.addActionListener(e -> sortByAuthor());
@@ -116,7 +116,7 @@ class PlaylistGUI {
         }
     }
 
-    private void appendSong() {
+    private void appendSongOption() {
         Object[] options = { "Manual Input", "From Song List" };
         int choice = JOptionPane.showOptionDialog(
                 frame,
