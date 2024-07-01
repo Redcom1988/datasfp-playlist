@@ -45,20 +45,25 @@ public class Playlist implements Serializable {
 
     // Remove the current song from the playlist
     public void removeCurrentSong() {
-        if (current == null)
-            return;
+        if (current == null) {
+            return; // No current song to remove
+        }
 
-        if (current.prev != null) {
-            current.prev.next = current.next;
-        } else {
+        // Case: Removing the head (first song)
+        if (current == head) {
             head = current.next;
         }
 
+        // Update the links of the previous and next songs
+        if (current.prev != null) {
+            current.prev.next = current.next;
+        }
         if (current.next != null) {
             current.next.prev = current.prev;
         }
 
-        current = current.next != null ? current.next : current.prev;
+        // Update current to a valid song (next if exists, otherwise previous)
+        current = (current.next != null) ? current.next : current.prev;
     }
 
     // Sort the playlist by song name
