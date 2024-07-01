@@ -158,28 +158,29 @@ public class Playlist implements Serializable {
         }
     }
 
-    // Display the entire playlist
-    public void display() {
-        Song temp = head;
-        if (temp == null) {
-            System.out.println("Playlist is empty.");
-        } else {
-            System.out.println("Playlist:");
-            while (temp != null) {
-                System.out.println("Song: " + temp.name + ", Author: " + temp.author);
-                temp = temp.next;
-            }
-        }
-    }
+    // Display the entire playlist (Deprecated)
+    // public void display() {
+    // Song temp = head;
+    // if (temp == null) {
+    // System.out.println("Playlist is empty.");
+    // } else {
+    // System.out.println("Playlist:");
+    // while (temp != null) {
+    // System.out.println("Song: " + temp.name + ", Author: " + temp.author);
+    // temp = temp.next;
+    // }
+    // }
+    // }
 
-    // Display the current song
-    public void displayCurrent() {
-        if (current != null) {
-            System.out.println("Current song: " + current.name + ", Author: " + current.author);
-        } else {
-            System.out.println("No current song.");
-        }
-    }
+    // Display the current song (Deprecated)
+    // public void displayCurrent() {
+    // if (current != null) {
+    // System.out.println("Current song: " + current.name + ", Author: " +
+    // current.author);
+    // } else {
+    // System.out.println("No current song.");
+    // }
+    // }
 
     // Move to the previous song in the playlist
     public void moveLeft() {
